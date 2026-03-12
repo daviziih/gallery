@@ -40,9 +40,9 @@ export function CameraCapture({
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode,
-          width: { ideal: 3840 }, // tenta pegar o máximo disponível
+          width: { ideal: 3840 }, // tenta pegar o máximo suportado
           height: { ideal: 2160 },
-          frameRate: { ideal: 60 } // se o dispositivo suportar
+          frameRate: { ideal: 60 }
         },
         audio: false
       })
@@ -70,16 +70,27 @@ export function CameraCapture({
     if (!videoRef.current) return
 
     const canvas = document.createElement('canvas')
+    // Usa resolução real do vídeo
     canvas.width = videoRef.current.videoWidth
     canvas.height = videoRef.current.videoHeight
 
     const ctx = canvas.getContext('2d')
     if (ctx) {
       ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height)
-      const dataUrl = canvas.toDataURL('image/jpeg', 1.0) // qualidade máxima
-      setPreview(dataUrl)
-      stopCamera()
+
+      // Usa toBlob para máxima qualidade
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) return
+          const url = URL.createObjectURL(blob)
+          setPreview(url)
+        },
+        'image/jpeg',
+        1.0
+      )
     }
+
+    stopCamera()
   }
 
   const handleSave = () => {
@@ -113,7 +124,13 @@ export function CameraCapture({
         </>
       ) : (
         <>
-          <Video ref={videoRef} autoPlay playsInline muted />
+          <Video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            style={{ objectFit: 'cover' }} // mantém proporção e evita distorção
+          />
           <CameraControls>
             <CaptureButton onClick={handleCapture} />
             <SwitchCameraButton
