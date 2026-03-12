@@ -72,7 +72,7 @@ export function CameraCapture({
         await track.applyConstraints(constraints)
       }
     } catch (error) {
-      console.error('Erro ao acessar câmera:', error)
+      console.error('Erro ao acessar câmera:a', error)
     }
   }
 
