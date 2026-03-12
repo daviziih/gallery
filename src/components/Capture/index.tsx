@@ -41,8 +41,9 @@ export function CameraCapture({
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode,
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
+          width: { ideal: 3840 },
+          height: { ideal: 2160 },
+          frameRate: { ideal: 30 }
         },
         audio: false
       })
@@ -52,6 +53,23 @@ export function CameraCapture({
       if (videoRef.current) {
         videoRef.current.srcObject = stream
         await videoRef.current.play()
+      }
+
+      // Tenta ativar foco e exposição contínuos se suportados
+      const track = stream.getVideoTracks()[0]
+      const capabilities = track.getCapabilities() as any // cast para "any" evita erro TS
+      const constraints: any = {}
+
+      if (capabilities.focusMode?.includes('continuous')) {
+        constraints.advanced = [{ focusMode: 'continuous' }]
+      }
+      if (capabilities.exposureMode?.includes('continuous')) {
+        if (!constraints.advanced) constraints.advanced = []
+        constraints.advanced.push({ exposureMode: 'continuous' })
+      }
+
+      if (constraints.advanced?.length) {
+        await track.applyConstraints(constraints)
       }
     } catch (error) {
       console.error('Erro ao acessar câmera:', error)
@@ -73,17 +91,13 @@ export function CameraCapture({
     if (!videoRef.current) return
 
     const canvas = document.createElement('canvas')
-    // Usar a resolução real do vídeo para melhor qualidade
     canvas.width = videoRef.current.videoWidth
     canvas.height = videoRef.current.videoHeight
 
     const ctx = canvas.getContext('2d')
-
     if (ctx) {
       ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height)
-      // JPEG com qualidade máxima
-      const dataUrl = canvas.toDataURL('image/jpeg', 1.0)
-
+      const dataUrl = canvas.toDataURL('image/jpeg', 1.0) // qualidade máxima
       setPreview(dataUrl)
       stopCamera()
     }
