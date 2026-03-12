@@ -30,21 +30,17 @@ export function CameraCapture({
 
   // Inicia a câmera automaticamente ao carregar
   useEffect(() => {
-    const result = await navigator.permissions.query({
-      name: 'camera' as PermissionName
-    })
-    if (result.state === 'granted') {
-      startCamera()
-    }
-
+    // Tenta iniciar a câmera sempre que o facingMode mudar
     startCamera()
     return () => stopCamera()
   }, [facingMode])
 
   const startCamera = async () => {
     try {
+      // Para qualquer stream anterior
       stopCamera()
 
+      // Solicita acesso à câmera
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode },
         audio: false
@@ -58,6 +54,7 @@ export function CameraCapture({
       }
 
       // Salva no localStorage que a câmera foi permitida
+      // OBS: Isso NÃO evita o popup no celular, só lembra que tentamos abrir
       localStorage.setItem('cameraAllowed', 'true')
     } catch (error) {
       console.error('Erro ao acessar câmera:', error)
