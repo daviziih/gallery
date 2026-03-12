@@ -118,6 +118,33 @@ export function CameraCapture({
     startCamera()
   }
 
+  const handleTapFocus = async (event: React.MouseEvent<HTMLVideoElement>) => {
+    if (!videoRef.current || !streamRef.current) return
+
+    const track = streamRef.current.getVideoTracks()[0]
+    const capabilities = track.getCapabilities() as any
+
+    if (!capabilities.focusMode?.includes('single-shot')) {
+      console.log('Foco manual não suportado neste dispositivo')
+      return
+    }
+
+    const rect = videoRef.current.getBoundingClientRect()
+    const x = (event.clientX - rect.left) / rect.width
+    const y = (event.clientY - rect.top) / rect.height
+
+    const constraints: any = {
+      advanced: [{ focusMode: 'single-shot', pointsOfInterest: [{ x, y }] }]
+    }
+
+    try {
+      await track.applyConstraints(constraints)
+      console.log('Foco aplicado em:', x, y)
+    } catch (err) {
+      console.error('Erro ao aplicar foco:', err)
+    }
+  }
+
   return (
     <VideoWrapper>
       <GalleryButton onClick={() => navigate('/gallery')}>
@@ -134,7 +161,13 @@ export function CameraCapture({
         </>
       ) : (
         <>
-          <Video ref={videoRef} autoPlay playsInline muted />
+          <Video
+            ref={videoRef}
+            onClick={handleTapFocus}
+            autoPlay
+            playsInline
+            muted
+          />
 
           <CameraControls>
             <CaptureButton onClick={handleCapture} />
