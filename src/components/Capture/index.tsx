@@ -30,19 +30,20 @@ export function CameraCapture({
 
   // Inicia a câmera automaticamente ao carregar
   useEffect(() => {
-    // Tenta iniciar a câmera sempre que o facingMode mudar
     startCamera()
     return () => stopCamera()
   }, [facingMode])
 
   const startCamera = async () => {
     try {
-      // Para qualquer stream anterior
       stopCamera()
 
-      // Solicita acesso à câmera
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode },
+        video: {
+          facingMode,
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        },
         audio: false
       })
 
@@ -52,10 +53,6 @@ export function CameraCapture({
         videoRef.current.srcObject = stream
         await videoRef.current.play()
       }
-
-      // Salva no localStorage que a câmera foi permitida
-      // OBS: Isso NÃO evita o popup no celular, só lembra que tentamos abrir
-      localStorage.setItem('cameraAllowed', 'true')
     } catch (error) {
       console.error('Erro ao acessar câmera:', error)
     }
@@ -76,14 +73,16 @@ export function CameraCapture({
     if (!videoRef.current) return
 
     const canvas = document.createElement('canvas')
+    // Usar a resolução real do vídeo para melhor qualidade
     canvas.width = videoRef.current.videoWidth
     canvas.height = videoRef.current.videoHeight
 
     const ctx = canvas.getContext('2d')
 
     if (ctx) {
-      ctx.drawImage(videoRef.current, 0, 0)
-      const dataUrl = canvas.toDataURL('image/jpeg')
+      ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height)
+      // JPEG com qualidade máxima
+      const dataUrl = canvas.toDataURL('image/jpeg', 1.0)
 
       setPreview(dataUrl)
       stopCamera()
