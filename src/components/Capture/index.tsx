@@ -30,6 +30,13 @@ export function CameraCapture({
 
   // Inicia a câmera automaticamente ao carregar
   useEffect(() => {
+    const result = await navigator.permissions.query({
+      name: 'camera' as PermissionName
+    })
+    if (result.state === 'granted') {
+      startCamera()
+    }
+
     startCamera()
     return () => stopCamera()
   }, [facingMode])
