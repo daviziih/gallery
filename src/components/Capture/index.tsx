@@ -25,13 +25,14 @@ export function CameraCapture({
   )
   const [preview, setPreview] = useState<string | null>(null)
   const [caption, setCaption] = useState('')
+  const [cameraStarted, setCameraStarted] = useState(false)
 
+  const navigate = useNavigate()
+
+  // Inicia a câmera automaticamente ao carregar
   useEffect(() => {
     startCamera()
-
-    return () => {
-      stopCamera()
-    }
+    return () => stopCamera()
   }, [facingMode])
 
   const startCamera = async () => {
@@ -49,8 +50,16 @@ export function CameraCapture({
         videoRef.current.srcObject = stream
         await videoRef.current.play()
       }
+
+      // Marca que a câmera está ativa
+      setCameraStarted(true)
+
+      // Salva no localStorage que a câmera foi permitida
+      localStorage.setItem('cameraAllowed', 'true')
     } catch (error) {
       console.error('Erro ao acessar câmera:', error)
+      // Se o usuário negar, pode mostrar um botão para tentar novamente
+      setCameraStarted(false)
     }
   }
 
@@ -63,6 +72,8 @@ export function CameraCapture({
     if (videoRef.current) {
       videoRef.current.srcObject = null
     }
+
+    setCameraStarted(false)
   }
 
   const handleCapture = () => {
@@ -86,7 +97,6 @@ export function CameraCapture({
   const handleSave = () => {
     if (preview) {
       onCapture(preview, caption)
-
       setPreview(null)
       setCaption('')
       startCamera()
@@ -99,8 +109,6 @@ export function CameraCapture({
     startCamera()
   }
 
-  const navigate = useNavigate()
-
   return (
     <VideoWrapper>
       <GalleryButton onClick={() => navigate('/gallery')}>
@@ -110,9 +118,8 @@ export function CameraCapture({
       {preview ? (
         <>
           <PictureWrapper src={preview} alt="Pré-visualização" />
-
           <PreviewControls>
-            <ActionButton onClick={handleDiscard}>✖</ActionButton>{' '}
+            <ActionButton onClick={handleDiscard}>✖</ActionButton>
             <ActionButton onClick={handleSave}>✔</ActionButton>
           </PreviewControls>
         </>
