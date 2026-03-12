@@ -9,7 +9,7 @@ export const PictureContainer = styled.div`
 
 export const PhotoCard = styled.div`
   width: 100%;
-  height: 200px;
+  height: 150px;
   overflow: hidden;
   background: #eee;
 
