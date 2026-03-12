@@ -40,6 +40,7 @@ export default function Camera() {
   return (
     <div>
       <CameraCapture onCapture={handleCapture} />
+      {uploading}
     </div>
   )
 }
