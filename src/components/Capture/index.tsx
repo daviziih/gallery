@@ -28,7 +28,6 @@ export function CameraCapture({
 
   const navigate = useNavigate()
 
-  // Inicia a câmera automaticamente ao carregar
   useEffect(() => {
     startCamera()
     return () => stopCamera()
@@ -41,9 +40,9 @@ export function CameraCapture({
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode,
-          width: { ideal: 3840 },
+          width: { ideal: 3840 }, // tenta pegar o máximo disponível
           height: { ideal: 2160 },
-          frameRate: { ideal: 30 }
+          frameRate: { ideal: 60 } // se o dispositivo suportar
         },
         audio: false
       })
@@ -54,25 +53,8 @@ export function CameraCapture({
         videoRef.current.srcObject = stream
         await videoRef.current.play()
       }
-
-      // Tenta ativar foco e exposição contínuos se suportados
-      const track = stream.getVideoTracks()[0]
-      const capabilities = track.getCapabilities() as any // cast para "any" evita erro TS
-      const constraints: any = {}
-
-      if (capabilities.focusMode?.includes('continuous')) {
-        constraints.advanced = [{ focusMode: 'continuous' }]
-      }
-      if (capabilities.exposureMode?.includes('continuous')) {
-        if (!constraints.advanced) constraints.advanced = []
-        constraints.advanced.push({ exposureMode: 'continuous' })
-      }
-
-      if (constraints.advanced?.length) {
-        await track.applyConstraints(constraints)
-      }
     } catch (error) {
-      console.error('Erro ao acessar câmera:a', error)
+      console.error('Erro ao acessar câmera:', error)
     }
   }
 
@@ -81,10 +63,7 @@ export function CameraCapture({
       streamRef.current.getTracks().forEach((track) => track.stop())
       streamRef.current = null
     }
-
-    if (videoRef.current) {
-      videoRef.current.srcObject = null
-    }
+    if (videoRef.current) videoRef.current.srcObject = null
   }
 
   const handleCapture = () => {
@@ -118,33 +97,6 @@ export function CameraCapture({
     startCamera()
   }
 
-  const handleTapFocus = async (event: React.MouseEvent<HTMLVideoElement>) => {
-    if (!videoRef.current || !streamRef.current) return
-
-    const track = streamRef.current.getVideoTracks()[0]
-    const capabilities = track.getCapabilities() as any
-
-    if (!capabilities.focusMode?.includes('single-shot')) {
-      console.log('Foco manual não suportado neste dispositivo')
-      return
-    }
-
-    const rect = videoRef.current.getBoundingClientRect()
-    const x = (event.clientX - rect.left) / rect.width
-    const y = (event.clientY - rect.top) / rect.height
-
-    const constraints: any = {
-      advanced: [{ focusMode: 'single-shot', pointsOfInterest: [{ x, y }] }]
-    }
-
-    try {
-      await track.applyConstraints(constraints)
-      console.log('Foco aplicado em:', x, y)
-    } catch (err) {
-      console.error('Erro ao aplicar foco:', err)
-    }
-  }
-
   return (
     <VideoWrapper>
       <GalleryButton onClick={() => navigate('/gallery')}>
@@ -161,14 +113,7 @@ export function CameraCapture({
         </>
       ) : (
         <>
-          <Video
-            ref={videoRef}
-            onClick={handleTapFocus}
-            autoPlay
-            playsInline
-            muted
-          />
-
+          <Video ref={videoRef} autoPlay playsInline muted />
           <CameraControls>
             <CaptureButton onClick={handleCapture} />
             <SwitchCameraButton
