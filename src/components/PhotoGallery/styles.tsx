@@ -20,33 +20,6 @@ export const PhotoCard = styled.div`
   }
 `
 
-// export const PictureContainer = styled.div`
-//   column-count: 3; /* número de colunas */
-//   column-gap: 10px; /* espaço entre colunas */
-//   padding: 10px;
-
-//   @media (max-width: 1024px) {
-//     column-count: 2;
-//   }
-
-//   @media (max-width: 600px) {
-//     column-count: 1;
-//   }
-// `
-
-// export const PhotoCard = styled.div`
-//   break-inside: avoid; /* evita que a imagem quebre entre colunas */
-//   margin-bottom: 10px;
-//   overflow: hidden;
-//   width: 100%;
-
-//   img {
-//     width: 100%;
-//     display: block;
-//     object-fit: cover; /* preenche o card sem distorcer */
-//   }
-// `
-
 export const Header = styled.div`
   width: 100%;
   height: 250px;
@@ -116,19 +89,33 @@ export const BackButton = styled.button`
   top: 20px;
   left: 20px;
 
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: none;
+  padding: 8px 16px;
 
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  font-size: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 30px;
+
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+
   cursor: pointer;
-
   z-index: 5;
-  backdrop-filter: blur(4px);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  transition: all 0.25s ease;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(255, 255, 255, 0.18);
+    border-color: #fff;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: scale(0.97);
   }
 `

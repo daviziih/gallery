@@ -48,26 +48,36 @@ export const CameraControls = styled.div`
 `
 //Novo
 export const ActionButton = styled.button`
-  width: 55px;
-  height: 55px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  border: none;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  font-size: 26px;
+  font-size: 24px;
   font-weight: bold;
 
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+
+  border: 2px solid rgba(255, 255, 255, 0.7);
 
   cursor: pointer;
-  transition: transform 0.1s;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #fff;
+  }
 
   &:active {
-    transform: scale(0.9);
+    transform: scale(0.92);
   }
 `
 
@@ -110,19 +120,30 @@ export const GalleryButton = styled.button`
   top: 20px;
   right: 20px;
 
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
+  padding: 8px 14px;
 
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  font-size: 14px;
+  background: transparent;
+  color: #fff;
+
+  border: 1.5px solid #fff;
+  border-radius: 20px;
+
+  font-size: 13px;
   font-weight: 500;
+  letter-spacing: 0.3px;
 
   cursor: pointer;
-  backdrop-filter: blur(4px);
 
-  transition: transform 0.1s;
+  transition: all 0.2s ease;
 
   z-index: 10;
+
+  &:hover {
+    background: #fff;
+    color: #000;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
 `
