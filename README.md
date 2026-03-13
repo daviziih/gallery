@@ -1,73 +1,90 @@
-# React + TypeScript + Vite
+# 📸 Event Photo Album
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Uma aplicação web para **captura e compartilhamento de fotos em eventos**.
+Os convidados podem acessar a página, tirar fotos diretamente pelo navegador e visualizar todas as imagens em uma **galeria compartilhada em tempo real**.
 
-Currently, two official plugins are available:
+Ideal para eventos como:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 💍 Casamentos
+- 🎉 Festas
+- 🎓 Formaturas
+- 🥳 Aniversários
+- 📷 Ensaios fotográficos
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# 🚀 Funcionalidades
 
-## Expanding the ESLint configuration
+- 📷 **Captura de fotos direto da câmera**
+- 🔄 **Alternância entre câmera frontal e traseira**
+- 🖼 **Preview da foto antes de salvar**
+- 📱 **Compatível com celular e desktop**
+- ⚡ **Galeria compartilhada em tempo real**
+- ☁ **Upload automático das fotos**
+- 🎨 Interface simples e intuitiva para convidados
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# 🛠 Tecnologias Utilizadas
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **React**
+- **TypeScript**
+- **Styled Components**
+- **React Router**
+- **Firebase (Storage + Database)**
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+# 📷 Como Funciona
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. O convidado acessa o link do álbum
+2. Permite acesso à câmera
+3. Tira uma foto diretamente pelo navegador
+4. Visualiza a foto antes de salvar
+5. A foto é enviada para o servidor
+6. A imagem aparece automaticamente na **galeria compartilhada**
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+# 📱 Compatibilidade
+
+A aplicação funciona nos principais navegadores:
+
+- Google Chrome
+- Safari
+- Edge
+- Firefox
+
+📌 **Observação:** Em dispositivos móveis o navegador pode solicitar permissão de câmera ao recarregar a página por questões de segurança.
+
+---
+
+# 🌐 Deploy
+
+O projeto pode ser publicado facilmente usando:
+
+- **Vercel**
+- **Firebase Hosting**
+
+---
+
+# 💡 Possíveis Melhorias Futuras
+
+- ❤️ Sistema de curtidas nas fotos
+- 🧾 Comentários nas imagens
+- 🔍 Filtro por convidados
+- 📥 Download em lote
+- 🎨 Filtros de foto
+- 📦 Download da galeria em ZIP
+
+---
+
+# 👨‍💻 Autor
+
+Desenvolvido por **Davi Gabriel**
+
+---
+
+# 📄 Licença
+
+Este projeto está sob a licença MIT.
