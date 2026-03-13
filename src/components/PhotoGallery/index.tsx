@@ -1,12 +1,6 @@
 import { useEffect, useState } from 'react'
 import { db, collection, onSnapshot, query, orderBy } from '../../lib/firebase'
-import {
-  BackButton,
-  Header,
-  HeaderTitle,
-  PhotoCard,
-  PictureContainer
-} from './styles'
+import { BackButton, Header, PhotoCard, PictureContainer } from './styles'
 
 import header from '../../assets/teste.jpg'
 import { useNavigate } from 'react-router-dom'
