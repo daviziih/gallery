@@ -1,79 +1,81 @@
 import styled from 'styled-components'
 
-export const Container = styled.div`
+export const Container = styled.div<{ background: string }>`
   width: 100%;
-  height: 100dvh;
-  position: relative;
+  height: 95vh;
   overflow: hidden;
-`
-
-export const Background = styled.div`
-  position: absolute;
-  inset: 0;
-
+  background-image: url(${(p) => p.background});
   background-size: cover;
   background-position: center;
+  position: relative;
 
-  filter: blur(4px);
-  transform: scale(1.05);
-`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-export const Overlay = styled.div`
-  position: absolute;
-  inset: 0;
-
-  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65));
+  /* camada de profundidade */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at center,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(0, 0, 0, 0.65) 100%
+    );
+  }
 `
 
 export const Content = styled.div`
   position: relative;
   z-index: 2;
-
-  height: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
   text-align: center;
   color: white;
+  padding: 20px;
 `
 
-export const Title = styled.h1`
-  font-size: 42px;
-  margin-bottom: 12px;
-
-  @media (max-width: 480px) {
-    font-size: 32px;
-  }
+export const Couple = styled.h1`
+  font-size: 2.6rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 1px;
 `
 
-export const Subtitle = styled.p`
-  font-size: 16px;
-  max-width: 320px;
-  line-height: 1.5;
-  margin-bottom: 30px;
+export const Phrase = styled.p`
+  margin-top: 12px;
+  font-size: 1rem;
   opacity: 0.9;
 `
 
-export const EnterButton = styled.button`
-  padding: 14px 28px;
-  font-size: 16px;
-  border-radius: 10px;
-  border: none;
-
+export const Divider = styled.div`
+  width: 60px;
+  height: 2px;
   background: white;
-  color: #000;
+  margin: 10px auto;
+  opacity: 0.6;
+`
 
+export const EnterButton = styled.button`
+  margin-top: 30px;
+  padding: 14px 32px;
+
+  background: transparent;
+  color: white;
+
+  border: 1px solid white;
+  border-radius: 30px;
+
+  font-size: 1rem;
   font-weight: 600;
 
   cursor: pointer;
-  transition: all 0.25s;
 
-  &:hover {
-    transform: scale(1.05);
-  }
+  backdrop-filter: blur(2px); /* leve efeito vidro */
+`
+
+export const Date = styled.span`
+  display: block;
+  margin-top: 25px;
+  font-size: 1rem;
+  opacity: 0.8;
 `

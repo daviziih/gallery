@@ -8,7 +8,7 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     body,html {
-        font: 400 1rem 'Roboto', sans-serif;
+        font-family: 'Playfair Display', serif;
     }
 
     a {

@@ -20,28 +20,95 @@ export const PhotoCard = styled.div`
   }
 `
 
+// export const PictureContainer = styled.div`
+//   column-count: 3; /* número de colunas */
+//   column-gap: 10px; /* espaço entre colunas */
+//   padding: 10px;
+
+//   @media (max-width: 1024px) {
+//     column-count: 2;
+//   }
+
+//   @media (max-width: 600px) {
+//     column-count: 1;
+//   }
+// `
+
+// export const PhotoCard = styled.div`
+//   break-inside: avoid; /* evita que a imagem quebre entre colunas */
+//   margin-bottom: 10px;
+//   overflow: hidden;
+//   width: 100%;
+
+//   img {
+//     width: 100%;
+//     display: block;
+//     object-fit: cover; /* preenche o card sem distorcer */
+//   }
+// `
+
 export const Header = styled.div`
   width: 100%;
   height: 250px;
+  position: relative;
+  overflow: hidden;
   background-size: cover;
   background-position: center;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  position: relative;
-
+  /* camadas de gradiente e luz */
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.35);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));
+    z-index: 1;
   }
 
-  h2 {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at top right,
+      rgba(255, 255, 255, 0.1),
+      transparent 60%
+    );
+    z-index: 2;
+  }
+
+  div {
     position: relative;
-    z-index: 1;
+    z-index: 3;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    color: white;
+    text-align: left;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  p {
+    font-size: 0.95rem;
+    margin-top: 5px;
+    opacity: 0.9;
+  }
+
+  /* ícones flutuantes discretos */
+  .icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    z-index: 4;
   }
 `
 
@@ -66,7 +133,7 @@ export const BackButton = styled.button`
   font-size: 14px;
   cursor: pointer;
 
-  z-index: 2;
+  z-index: 5;
   backdrop-filter: blur(4px);
 
   &:hover {

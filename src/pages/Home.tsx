@@ -1,5 +1,13 @@
 import { useNavigate } from 'react-router-dom'
-import { Background, Container, Content, EnterButton, Subtitle, Title } from '.'
+import {
+  Container,
+  Content,
+  Couple,
+  Date,
+  Divider,
+  EnterButton,
+  Phrase
+} from '.'
 
 import background from '../assets/img.jpeg'
 
@@ -7,20 +15,21 @@ export default function Home() {
   const navigate = useNavigate()
 
   return (
-    <Container>
-      <Background style={{ backgroundImage: `url(${background})` }} />
-
+    <Container background={background}>
       <Content>
-        <Title>Sara & Davi</Title>
+        <Couple>Sara & Davi</Couple>
 
-        <Subtitle>
+        <Phrase>
           Um álbum compartilhado para registrar todos os momentos do nosso
           grande dia.
-        </Subtitle>
+        </Phrase>
+
+        <Divider />
 
         <EnterButton onClick={() => navigate('/camera')}>
-          Acessar Álbum
+          📸 Ver Álbum
         </EnterButton>
+        <Date>28 • Março • 2026</Date>
       </Content>
     </Container>
   )

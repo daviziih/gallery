@@ -45,10 +45,11 @@ export function PhotoGallery() {
     <div>
       <Header style={{ backgroundImage: `url(${header})` }}>
         <BackButton onClick={() => navigate('/camera')}>← Voltar</BackButton>
-
-        <HeaderTitle>
+        <div>
           <h1>Sara & Davi</h1>
-        </HeaderTitle>
+          <p>📸 Momentos que valem mil palavras</p>
+        </div>
+        <span className="icon">📷</span> {/* ícone discreto no topo direito */}
       </Header>
 
       <PictureContainer>
@@ -64,6 +65,24 @@ export function PhotoGallery() {
           ))
         )}
       </PictureContainer>
+
+      {/* <PictureContainer>
+        {photos.length === 0 ? (
+          <p style={{ textAlign: 'center', marginTop: 40 }}>
+            📸 Nenhuma foto ainda
+          </p>
+        ) : (
+          <Masonry columns={3} gap={5}>
+            {photos.map((photo, idx) => {
+              return (
+                <PhotoCard key={idx}>
+                  <img src={photo.url} alt="capturada" loading="lazy" />
+                </PhotoCard>
+              )
+            })}
+          </Masonry>
+        )}
+      </PictureContainer> */}
     </div>
   )
 }
