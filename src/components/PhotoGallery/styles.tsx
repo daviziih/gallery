@@ -56,24 +56,16 @@ export const Header = styled.div`
   background-position: center;
 
   /* camadas de gradiente e luz */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));
-    z-index: 1;
-  }
 
   &::after {
     content: '';
     position: absolute;
     inset: 0;
     background: radial-gradient(
-      circle at top right,
-      rgba(255, 255, 255, 0.1),
-      transparent 60%
+      circle at center,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(0, 0, 0, 0.65) 100%
     );
-    z-index: 2;
   }
 
   div {
