@@ -2,18 +2,20 @@ import styled from 'styled-components'
 
 //Novo
 export const CaptureButton = styled.button`
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: red;
-  border: 6px solid #e5e5e5;
-  cursor: pointer;
-  transition: transform 0.1s;
+  position: absolute;
+  top: 10px;
+  left: 10px;
 
-  &:active {
-    transform: scale(0.9);
-  }
+  width: 60px;
+  height: 60px;
+
+  border-radius: 50%;
+  border: none;
+  background: white;
+
+  cursor: pointer;
 `
+
 // Novo
 export const SwitchCameraButton = styled.button`
   position: absolute;
@@ -146,4 +148,17 @@ export const GalleryButton = styled.button`
   &:active {
     transform: scale(0.95);
   }
+`
+
+export const CaptureWrapper = styled.div`
+  position: relative;
+  width: 80px;
+  height: 80px;
+`
+
+export const ProgressRing = styled.svg`
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
 `

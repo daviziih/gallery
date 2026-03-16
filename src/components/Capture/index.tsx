@@ -3,9 +3,11 @@ import {
   ActionButton,
   CameraControls,
   CaptureButton,
+  CaptureWrapper,
   GalleryButton,
   PictureWrapper,
   PreviewControls,
+  ProgressRing,
   SwitchCameraButton,
   Video,
   VideoWrapper
@@ -24,6 +26,8 @@ export function CameraCapture({
   const chunksRef = useRef<Blob[]>([])
   const pressTimer = useRef<number | null>(null)
   const recordTimeout = useRef<number | null>(null)
+  const [progress, setProgress] = useState(0)
+  const progressInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>(
     'environment'
@@ -102,6 +106,15 @@ export function CameraCapture({
   const startRecording = () => {
     if (!streamRef.current) return
 
+    setProgress(0)
+
+    progressInterval.current = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) return 100
+        return prev + 100 / 30
+      })
+    }, 1000)
+
     const recorder = new MediaRecorder(streamRef.current, {
       mimeType: 'video/webm'
     })
@@ -139,6 +152,13 @@ export function CameraCapture({
       recordTimeout.current = null
     }
 
+    if (progressInterval.current) {
+      clearInterval(progressInterval.current)
+      progressInterval.current = null
+    }
+
+    setProgress(0)
+
     stopCamera()
   }
 
@@ -148,6 +168,10 @@ export function CameraCapture({
       startRecording()
     }, 300)
   }
+
+  const radius = 36
+  const circumference = 2 * Math.PI * radius
+  const offset = circumference - (progress / 100) * circumference
 
   const handlePressEnd = () => {
     if (pressTimer.current) {
@@ -206,20 +230,37 @@ export function CameraCapture({
           />
 
           <CameraControls>
-            <CaptureButton
-              onMouseDown={handlePressStart}
-              onMouseUp={handlePressEnd}
-              onTouchStart={handlePressStart}
-              onTouchEnd={handlePressEnd}
-            />
+            <CaptureWrapper>
+              <ProgressRing width="80" height="80">
+                <circle
+                  cx="40"
+                  cy="40"
+                  r={radius}
+                  stroke="rgba(255,255,255,0.3)"
+                  strokeWidth="4"
+                  fill="transparent"
+                />
 
-            <SwitchCameraButton
-              onClick={() =>
-                setFacingMode(facingMode === 'user' ? 'environment' : 'user')
-              }
-            >
-              🔄
-            </SwitchCameraButton>
+                <circle
+                  cx="40"
+                  cy="40"
+                  r={radius}
+                  stroke="red"
+                  strokeWidth="4"
+                  fill="transparent"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={offset}
+                  strokeLinecap="round"
+                />
+              </ProgressRing>
+
+              <CaptureButton
+                onMouseDown={handlePressStart}
+                onMouseUp={handlePressEnd}
+                onTouchStart={handlePressStart}
+                onTouchEnd={handlePressEnd}
+              />
+            </CaptureWrapper>
           </CameraControls>
         </>
       )}
