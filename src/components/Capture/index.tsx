@@ -8,7 +8,6 @@ import {
   PictureWrapper,
   PreviewControls,
   ProgressRing,
-  SwitchCameraButton,
   Video,
   VideoWrapper
 } from './styles'
@@ -29,14 +28,13 @@ export function CameraCapture({
   const [progress, setProgress] = useState(0)
   const progressInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const [facingMode, setFacingMode] = useState<'user' | 'environment'>(
-    'environment'
-  )
   const [preview, setPreview] = useState<string | null>(null)
   const [caption, setCaption] = useState('')
   const [recording, setRecording] = useState(false)
 
   const navigate = useNavigate()
+
+  const [facingMode] = useState<'user' | 'environment'>('environment')
 
   useEffect(() => {
     startCamera()
