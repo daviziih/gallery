@@ -207,7 +207,7 @@ export function CameraCapture({
       {preview ? (
         <>
           {preview.includes('blob:') ? (
-            <PictureWrapper src={preview} />
+            <video src={preview} controls style={{ width: '100%' }} />
           ) : (
             <PictureWrapper src={preview} alt="Pré-visualização" />
           )}

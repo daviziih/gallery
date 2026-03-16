@@ -2,18 +2,22 @@ import styled from 'styled-components'
 
 //Novo
 export const CaptureButton = styled.button`
-  position: absolute;
-  top: 10px;
-  left: 10px;
-
-  width: 60px;
-  height: 60px;
-
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  border: none;
-  background: white;
-
+  background: red;
+  border: 6px solid #e5e5e5;
   cursor: pointer;
+  transition: transform 0.1s;
+
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: none;
+
+  &:active {
+    transform: scale(0.9);
+  }
 `
 
 // Novo
@@ -99,6 +103,8 @@ export const VideoWrapper = styled.div`
   height: 90vh;
 
   overflow: hidden;
+  user-select: none;
+  touch-action: manipulation;
 `
 
 export const PictureWrapper = styled.img`
