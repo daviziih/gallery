@@ -3,11 +3,10 @@ import {
   ActionButton,
   CameraControls,
   CaptureButton,
-  CaptureWrapper,
   GalleryButton,
   PictureWrapper,
   PreviewControls,
-  ProgressRing,
+  SwitchCameraButton,
   Video,
   VideoWrapper
 } from './styles'
@@ -21,20 +20,13 @@ export function CameraCapture({
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
 
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
-  const chunksRef = useRef<Blob[]>([])
-  const pressTimer = useRef<number | null>(null)
-  const recordTimeout = useRef<number | null>(null)
-  const [progress, setProgress] = useState(0)
-  const progressInterval = useRef<ReturnType<typeof setInterval> | null>(null)
-
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>(
+    'environment'
+  )
   const [preview, setPreview] = useState<string | null>(null)
   const [caption, setCaption] = useState('')
-  const [recording, setRecording] = useState(false)
 
   const navigate = useNavigate()
-
-  const [facingMode] = useState<'user' | 'environment'>('environment')
 
   useEffect(() => {
     startCamera()
@@ -48,11 +40,11 @@ export function CameraCapture({
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode,
-          width: { ideal: 3840 },
+          width: { ideal: 3840 }, // tenta pegar o máximo suportado
           height: { ideal: 2160 },
           frameRate: { ideal: 60 }
         },
-        audio: true
+        audio: false
       })
 
       streamRef.current = stream
@@ -74,11 +66,11 @@ export function CameraCapture({
     if (videoRef.current) videoRef.current.srcObject = null
   }
 
-  // FOTO
   const handleCapture = () => {
     if (!videoRef.current) return
 
     const canvas = document.createElement('canvas')
+    // Usa resolução real do vídeo
     canvas.width = videoRef.current.videoWidth
     canvas.height = videoRef.current.videoHeight
 
@@ -86,6 +78,7 @@ export function CameraCapture({
     if (ctx) {
       ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height)
 
+      // Usa toBlob para máxima qualidade
       canvas.toBlob(
         (blob) => {
           if (!blob) return
@@ -93,94 +86,11 @@ export function CameraCapture({
           setPreview(url)
         },
         'image/jpeg',
-        1
+        1.0
       )
     }
 
     stopCamera()
-  }
-
-  // VIDEO
-  const startRecording = () => {
-    if (!streamRef.current) return
-
-    setProgress(0)
-
-    progressInterval.current = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) return 100
-        return prev + 100 / 30
-      })
-    }, 1000)
-
-    const recorder = new MediaRecorder(streamRef.current, {
-      mimeType: 'video/webm'
-    })
-
-    chunksRef.current = []
-
-    recorder.ondataavailable = (e) => {
-      if (e.data.size > 0) chunksRef.current.push(e.data)
-    }
-
-    recorder.onstop = () => {
-      const blob = new Blob(chunksRef.current, { type: 'video/webm' })
-      const url = URL.createObjectURL(blob)
-      setPreview(url)
-    }
-
-    recorder.start()
-    mediaRecorderRef.current = recorder
-    setRecording(true)
-
-    // limite 30s
-    recordTimeout.current = setTimeout(() => {
-      stopRecording()
-    }, 30000)
-  }
-
-  const stopRecording = () => {
-    if (!mediaRecorderRef.current) return
-
-    mediaRecorderRef.current.stop()
-    setRecording(false)
-
-    if (recordTimeout.current) {
-      clearTimeout(recordTimeout.current)
-      recordTimeout.current = null
-    }
-
-    if (progressInterval.current) {
-      clearInterval(progressInterval.current)
-      progressInterval.current = null
-    }
-
-    setProgress(0)
-
-    stopCamera()
-  }
-
-  // SEGURAR BOTÃO
-  const handlePressStart = () => {
-    pressTimer.current = setTimeout(() => {
-      startRecording()
-    }, 300)
-  }
-
-  const radius = 36
-  const circumference = 2 * Math.PI * radius
-  const offset = circumference - (progress / 100) * circumference
-
-  const handlePressEnd = () => {
-    if (pressTimer.current) {
-      clearTimeout(pressTimer.current)
-      pressTimer.current = null
-      if (!recording) handleCapture()
-    }
-
-    if (recording) {
-      stopRecording()
-    }
   }
 
   const handleSave = () => {
@@ -206,12 +116,7 @@ export function CameraCapture({
 
       {preview ? (
         <>
-          {preview.includes('blob:') ? (
-            <video src={preview} controls style={{ width: '100%' }} />
-          ) : (
-            <PictureWrapper src={preview} alt="Pré-visualização" />
-          )}
-
+          <PictureWrapper src={preview} alt="Pré-visualização" />
           <PreviewControls>
             <ActionButton onClick={handleDiscard}>✖</ActionButton>
             <ActionButton onClick={handleSave}>✔</ActionButton>
@@ -224,41 +129,17 @@ export function CameraCapture({
             autoPlay
             playsInline
             muted
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: 'cover' }} // mantém proporção e evita distorção
           />
-
           <CameraControls>
-            <CaptureWrapper>
-              <ProgressRing width="80" height="80">
-                <circle
-                  cx="40"
-                  cy="40"
-                  r={radius}
-                  stroke="rgba(255,255,255,0.3)"
-                  strokeWidth="4"
-                  fill="transparent"
-                />
-
-                <circle
-                  cx="40"
-                  cy="40"
-                  r={radius}
-                  stroke="red"
-                  strokeWidth="4"
-                  fill="transparent"
-                  strokeDasharray={circumference}
-                  strokeDashoffset={offset}
-                  strokeLinecap="round"
-                />
-              </ProgressRing>
-
-              <CaptureButton
-                onMouseDown={handlePressStart}
-                onMouseUp={handlePressEnd}
-                onTouchStart={handlePressStart}
-                onTouchEnd={handlePressEnd}
-              />
-            </CaptureWrapper>
+            <CaptureButton onClick={handleCapture} />
+            <SwitchCameraButton
+              onClick={() =>
+                setFacingMode(facingMode === 'user' ? 'environment' : 'user')
+              }
+            >
+              🔄
+            </SwitchCameraButton>
           </CameraControls>
         </>
       )}
